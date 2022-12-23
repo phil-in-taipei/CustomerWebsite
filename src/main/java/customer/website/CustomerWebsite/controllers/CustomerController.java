@@ -25,7 +25,12 @@ public class CustomerController {
     }
 
     @RequestMapping("/delete/{id}")
-    public String deleteCustomer(@PathVariable(name = "id") Long id) {
+    public String deleteCustomer(@PathVariable(name = "id") Long id, Model model) {
+        if (customerService.getCustomer(id) == null) {
+            model.addAttribute("message",
+                    "Cannot delete, customer with id " + id + " does not exist.");
+            return "error";
+        }
         customerService.deleteCustomer(id);
         return "redirect:/";
     }
@@ -34,8 +39,18 @@ public class CustomerController {
     // As the Model is received back from the view, @ModelAttribute
     // creates a Customer based on the object you collected from
     // the HTML page above
-    public String saveCustomer(@ModelAttribute("customer") Customer customer) {
-        customerService.saveCustomer(customer);
+    public String saveCustomer(
+            @ModelAttribute("customer") Customer customer, Model model) {
+        try {
+            customerService.saveCustomer(customer);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute(
+                    "message",
+                    "Could not save customer, "
+                    + e.getMessage()
+            );
+            return "error";
+        }
         return "redirect:/";
     }
 
@@ -48,7 +63,15 @@ public class CustomerController {
         // certain circumstances. The view name is passed to the constructor.
         ModelAndView mav = new ModelAndView("edit-customer");
         Customer customer = customerService.getCustomer(id);
-        mav.addObject("customer", customer);
+        if (customer == null) {
+            mav.setViewName("error");
+            mav.addObject("message",
+                    "Customer with id "
+                    + id + " does not exist."
+            );
+        } else {
+            mav.addObject("customer", customer);
+        }
         return mav;
     }
 
@@ -69,7 +92,7 @@ public class CustomerController {
             model.addAttribute("message",
                     "Cannot update, customer id " + customer.getId()
                             + " doesn't match id to be updated: " + id + ".");
-            return "error-page";
+            return "error";
         }
         customerService.saveCustomer(customer);
         return "redirect:/";

@@ -25,9 +25,9 @@ public class RentalBike {
 
     @Override
     public String toString() {
-        return "RentalBike: " +
-                ", color='" + color + '\'' +
-                ", brand='" + brand + '\'' +
-                ", model='" ;
+        return "Rental Bike #" + id + ": " +
+                " Color=" + color +
+                ", Brand=" + brand +
+                ", Model=" + model;
     }
 }

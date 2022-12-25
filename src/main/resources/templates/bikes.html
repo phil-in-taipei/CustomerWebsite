@@ -17,7 +17,7 @@
                 <th>Color</th>
                 <th>Brand</th>
                 <th>Model</th>
-                <!--<th>Customer</th> -->
+                <th>Customer</th>
             </tr>
             </thead>
             <tbody>
@@ -26,8 +26,8 @@
                 <td th:text="${bike.color}"></td>
                 <td th:text="${bike.brand}"></td>
                 <td th:text="${bike.model}"></td>
-                <!-- <td th:text="${bike.customer != null} ? ${bike.customer.fullName}"></td> -->
-                <!--            <td th:text="${bike.customer.fullName}"></td>-->
+                <td th:text="${bike.customer != null} ? ${bike.customer.fullName}"></td>
+                            <!--<td th:text="${bike.customer.fullName}"></td> -->
             </tr>
             </tbody>
         </table>

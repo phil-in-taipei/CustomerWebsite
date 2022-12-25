@@ -22,6 +22,7 @@
             <th>Email Address</th>
             <th>Age</th>
             <th>Address</th>
+            <th>Rental Bike</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -38,8 +39,16 @@
             <td th:text="${customer.emailAddress}">Email Address</td>
             <td th:text="${customer.age}">Age</td>
             <td th:text="${customer.address}">Address</td>
+            <td th:text="${customer.bike}">Rental Bike</td>
             <td><a th:href="@{'/edit/' + ${customer.id}}">Edit</a>,
-                <a th:href="@{'/delete/' + ${customer.id}}">Delete</a>
+                <a th:href="@{'/delete/' + ${customer.id}}">Delete</a>,
+                <a th:text="${(customer.bike == null) ? 'Assign Rental Bike' : ''}"
+                   th:href="@{'/bikes/assign/' + ${customer.id}}">
+                </a>
+                <a th:text="${(customer.bike != null) ? 'Remove Rental Bike' : ''}"
+                   th:href="${(customer.bike != null) ? '/unassign/' + customer.bike.getId() : ''}">
+
+                </a>
             </td>
         </tr>
         </tbody>

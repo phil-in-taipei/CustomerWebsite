@@ -1,4 +1,5 @@
 package customer.website.CustomerWebsite.controllers;
+import customer.website.CustomerWebsite.models.Customer;
 import customer.website.CustomerWebsite.models.RentalBike;
 import customer.website.CustomerWebsite.services.BikeService;
 import customer.website.CustomerWebsite.services.CustomerService;
@@ -17,6 +18,35 @@ public class BikeController {
 
     @Autowired
     CustomerService customerService;
+
+    @GetMapping("/bikes/assign/{customerId}")
+    public String assignBikeToCustomer(@PathVariable(name = "customerId") Long customerId, Model model) {
+        Customer customer = customerService.getCustomer(customerId);
+        List<RentalBike> bikeList = bikeService.getAvailableBikes();
+        model.addAttribute("customer", customer);
+        model.addAttribute("bikeList", bikeList);
+        return "assign-bike";
+    }
+
+    @PostMapping("/bikes/assign")
+    public String saveBikeToCustomerAssignment(
+            @RequestParam("customerId") Long customerId,
+            @RequestParam("bikeId") Long bikeId) {
+        RentalBike bike = bikeService.getBike(bikeId);
+        bike.setCustomer(customerService.getCustomer(customerId));
+        bikeService.saveBike(bike);
+        return "redirect:/";
+    }
+
+    @RequestMapping("/unassign/{bikeId}")
+    public String unassignBikeFromCustomer(@PathVariable(name = "bikeId") Long bikeId) {
+        RentalBike bike = bikeService.getBike(bikeId);
+        bike.setCustomer(null);
+        bikeService.saveBike(bike);
+        return "redirect:/";
+    }
+
+
 
     @GetMapping("/bikes")
     public String viewAllBikes(Model model) {
